@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { Appointment } from '../models/appointment';
-import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-appointment-list',
@@ -15,8 +14,6 @@ export class AppointmentListComponent {
   appointments: Appointment[] = []
 
   addAppointment() {
-    let appointmentString: string = "";
-
     if (this.newAppointmentTitle.trim().length && this.newAppointmentDate) {
       let newAppointment: Appointment = {
         id: Date.now(),
@@ -26,14 +23,21 @@ export class AppointmentListComponent {
 
       this.appointments.push(newAppointment);
 
-      for (let i = 0; i < this.appointments.length; i++) {
-        appointmentString += `Task: ${this.appointments[i].title}   Date: ${this.appointments[i].date}\n`;
-      }
-
       this.newAppointmentDate = new Date();
       this.newAppointmentTitle = "";
+
+      localStorage.setItem("appointments", JSON.stringify(this.appointments))
     }
-    alert(appointmentString);
+  }
+
+  deleteAppointment(index: number) {
+    this.appointments.splice(index, 1);
+    localStorage.setItem("appointments", JSON.stringify(this.appointments))
+  }
+
+  deleteAllAppointments() {
+    this.appointments = [];
+    localStorage.clear();
   }
 }
 
